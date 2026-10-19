@@ -1,0 +1,20 @@
+# Host-port overrides for local dev, layered on top of docker-compose-local.yml:
+#   docker compose -f docker-compose-local.yml -f docker-compose-local.ports.yml up -d
+# Kept in its own file so docker-compose-local.yml stays identical to upstream and pulls never conflict.
+# Move a port per machine with LOCAL_*_PORT in the root .env; no file edits needed.
+# Defaults sit beside the other local stacks: redis 6380 (6379 is taken) and api 8002 (8000/8001 are taken).
+# Only the host side changes. Containers still talk to each other on the container ports.
+services:
+  plane-redis:
+    ports: !override
+      - "${LOCAL_REDIS_PORT:-6380}:6379"
+  plane-db:
+    ports: !override
+      - "${LOCAL_DB_PORT:-5432}:5432"
+  plane-minio:
+    ports: !override
+      - "${LOCAL_MINIO_PORT:-9000}:9000"
+      - "${LOCAL_MINIO_CONSOLE_PORT:-9090}:9090"
+  api:
+    ports: !override
+      - "${LOCAL_API_PORT:-8002}:8000"

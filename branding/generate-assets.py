@@ -46,7 +46,10 @@ WHITE = (255, 255, 255, 255)
 
 
 def save(img: Image.Image, path: Path, **kw):
-    path.parent.mkdir(parents=True, exist_ok=True)
+    # Every target is an upstream asset. If one is missing, upstream moved or renamed it and the app
+    # now loads a different file, so writing here would silently do nothing.
+    if not path.exists():
+        raise SystemExit(f"{path.relative_to(ROOT)} not found: upstream moved it? Update branding/generate-assets.py")
     img.save(path, **kw)
 
 
@@ -102,7 +105,7 @@ def og_image(path: Path):
     Idempotent: the logo box is wiped to the white background before pasting. If upstream
     redesigns og-image.png, update LOGO_BOX to the new logo position.
     """
-    LOGO_BOX = (90, 80, 215, 165)  # x0, y0, x1, y1 around the original mark
+    LOGO_BOX = (90, 70, 215, 175)  # x0, y0, x1, y1: white area that must fully cover the old and the new mark
     img = Image.open(path).convert("RGBA")
     img.paste(WHITE, LOGO_BOX)
     mark = fit(88)
