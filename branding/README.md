@@ -41,17 +41,31 @@ If the merge conflicts only in files `rename.py` rewrites (locale JSON, UI strin
 - Colour: the two hex values at the top of `brand.css` (light and dark mode).
 - Logo: replace `scholrithm-mark.svg`, paste the same paths into `plane-logo.tsx`, then run `python3 branding/generate-assets.py` (needs macOS `sips` and Pillow).
 
-## Local dev ports
+## Run the dev stack (local ports)
 
-Plane's defaults collide with other local stacks (redis 6379, api 8000). Start the stack with the override file:
+Plane's defaults collide with other local stacks (3000, redis 6379, api 8000). One script starts everything on other ports:
 
 ```sh
-docker compose -f docker-compose-local.yml -f docker-compose-local.ports.yml up -d
+./setup.sh                      # once per clone: creates the .env files
+branding/dev-local.sh up        # containers, then web / admin / space / live
+branding/dev-local.sh status
+branding/dev-local.sh down      # stops everything, keeps the data volumes
 ```
 
-Defaults: redis 6380, api 8002 (db 5432 and minio 9000/9090 unchanged). Move any of them per machine with `LOCAL_REDIS_PORT`, `LOCAL_API_PORT`, `LOCAL_DB_PORT`, `LOCAL_MINIO_PORT`, `LOCAL_MINIO_CONSOLE_PORT` in the root `.env`.
+| Service   | Default    | Override in the root `.env`                    |
+| --------- | ---------- | ---------------------------------------------- |
+| web       | 3200       | `LOCAL_WEB_PORT`                               |
+| admin     | 3201       | `LOCAL_ADMIN_PORT`                             |
+| space     | 3202       | `LOCAL_SPACE_PORT`                             |
+| live      | 3300       | `LOCAL_LIVE_PORT`                              |
+| api       | 8002       | `LOCAL_API_PORT`                               |
+| redis     | 6380       | `LOCAL_REDIS_PORT`                             |
+| postgres  | 5432       | `LOCAL_DB_PORT`                                |
+| minio, ui | 9000, 9090 | `LOCAL_MINIO_PORT`, `LOCAL_MINIO_CONSOLE_PORT` |
 
-After `./setup.sh`, point the apps at the api port in `apps/{web,admin,space}/.env` (`VITE_API_BASE_URL`) and `apps/live/.env` (`API_BASE_URL`, `REDIS_URL`), for example `http://localhost:8002`. The `.env` files are git-ignored, so this is a one-time step per clone.
+`up` also writes these ports into the git-ignored `apps/*/.env` files (base URLs, CORS origins, live `PORT`, redis), so changing a port is a one-line edit plus `up`; no `.env` hand-editing. Open admin at `/god-mode` and space at `/spaces`.
+
+Why a script: the apps' own `dev` scripts hard-code `--port 3000/3001/3002` in upstream-owned `package.json` files, and the compose ports live in upstream-owned `docker-compose-local.yml`. The script and `docker-compose-local.ports.yml` replace them without editing either, so pulls stay clean. To use compose by hand: `docker compose -f docker-compose-local.yml -f docker-compose-local.ports.yml up -d`.
 
 ## Deploying
 
