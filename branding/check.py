@@ -50,5 +50,9 @@ for svc in re.findall(r"^  ([\w-]+):$", read("docker-compose-local.ports.yml"), 
 if subprocess.run([sys.executable, "-I", str(ROOT / "branding/rename.py"), "--check"], capture_output=True).returncode:
     problems.append("upstream added strings that still say Plane: python3 branding/rename.py")
 
+# 5. Plane's customer-logo footer (Zerodha, Sony, ...) stays off the sign-in pages
+if "<AuthFooter" in read("apps/web/components/auth-screens/auth-base.tsx"):
+    problems.append("upstream re-added Plane's customer-logo footer: remove <AuthFooter /> from auth-screens/auth-base.tsx")
+
 print("\n".join(f"FAIL: {p}" for p in problems) or "OK: rebrand intact")
 raise SystemExit(bool(problems))
