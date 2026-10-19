@@ -5,6 +5,8 @@ Exits non-zero and says what to fix. Needs `pnpm install` (reads propel) and a b
 """
 
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -43,6 +45,10 @@ local = read("docker-compose-local.yml")
 for svc in re.findall(r"^  ([\w-]+):$", read("docker-compose-local.ports.yml"), re.M):
     if f"\n  {svc}:" not in local:
         problems.append(f"docker-compose-local.ports.yml overrides '{svc}', which upstream renamed or removed")
+
+# 4. no new upstream string still says "Plane"
+if subprocess.run([sys.executable, "-I", str(ROOT / "branding/rename.py"), "--check"], capture_output=True).returncode:
+    problems.append("upstream added strings that still say Plane: python3 branding/rename.py")
 
 print("\n".join(f"FAIL: {p}" for p in problems) or "OK: rebrand intact")
 raise SystemExit(bool(problems))

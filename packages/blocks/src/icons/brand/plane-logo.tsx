@@ -9,9 +9,11 @@ import * as React from "react";
 export type PlaneLogoProps = React.ComponentPropsWithoutRef<"svg">;
 
 // Scholrithm mark (source: /branding/scholrithm-mark.svg). Name kept so upstream call sites merge cleanly.
-export function PlaneLogo({ width = "37", height = "47", className }: PlaneLogoProps) {
+// Full colour by default; pass `color` for a single-colour mark (the lockup does).
+export function PlaneLogo({ width = "37", height = "47", className, color }: PlaneLogoProps) {
   // unique per instance: a shared id breaks when the first instance sits in a display:none subtree
   const gradientId = `scholrithm-mark-${React.useId().replace(/:/g, "")}`;
+  const paint = color ?? `url(#${gradientId})`;
   return (
     <svg
       width={width}
@@ -32,12 +34,12 @@ export function PlaneLogo({ width = "37", height = "47", className }: PlaneLogoP
           <stop offset="1" stopColor="#1C9CFD" />
         </linearGradient>
       </defs>
-      <g fill={`url(#${gradientId})`} stroke={`url(#${gradientId})`} strokeWidth="7" strokeLinejoin="round">
+      <g fill={paint} stroke={paint} strokeWidth="7" strokeLinejoin="round">
         <path d="M106 11 L193 58 L169 72 L106 45 L50 78 L50 109 Q72 130 90 142 Q97 147 101 150 Q90 149 81 146 Q60 139 21 120 L18 64 Z" />
         <path d="M81 95 L106 81 L190 121 L194 178 L106 235 L18 186 L42 171 L105 203 L163 169 L163 138 L122 103 L107 109 Z" />
       </g>
-      <circle cx="106" cy="152" r="6.8" fill={`url(#${gradientId})`} />
-      <path d="M94 105.5 L107 112 L121 105 L121 116.5 L107 123 L94 116.5 Z" fill="#0747D4" />
+      <circle cx="106" cy="152" r="6.8" fill={paint} />
+      <path d="M94 105.5 L107 112 L121 105 L121 116.5 L107 123 L94 116.5 Z" fill={color ?? "#0747D4"} />
       <path d="M108 97 L121.5 103" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" fill="none" />
       <path
         d="M91.5 103.6 L107 111.2 L122.8 103.6"
