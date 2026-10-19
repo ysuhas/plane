@@ -88,8 +88,26 @@ def main():
                 frames[0], assets / "images" / name,
                 save_all=True, append_images=frames[1:], duration=40, loop=0, disposal=2, transparency=255,
             )
+    web = ROOT / "apps" / "web"
     for size in (192, 348, 512):
-        save(icon(size, 0.60, WHITE), ROOT / "apps" / "web" / "public" / "icons" / f"icon-{size}x{size}.png")
+        save(icon(size, 0.60, WHITE), web / "public" / "icons" / f"icon-{size}x{size}.png")
+    for size in (180, 512):
+        save(icon(size, 0.60, WHITE), web / "app" / "assets" / "icons" / f"icon-{size}x{size}.png")
+    og_image(web / "app" / "assets" / "og-image.png")
+
+
+def og_image(path: Path):
+    """Swap only the logo in the link-preview image, keeping the rest of the layout.
+
+    Idempotent: the logo box is wiped to the white background before pasting. If upstream
+    redesigns og-image.png, update LOGO_BOX to the new logo position.
+    """
+    LOGO_BOX = (90, 80, 215, 165)  # x0, y0, x1, y1 around the original mark
+    img = Image.open(path).convert("RGBA")
+    img.paste(WHITE, LOGO_BOX)
+    mark = fit(88)
+    img.alpha_composite(mark, (96, LOGO_BOX[1] + (LOGO_BOX[3] - LOGO_BOX[1] - mark.height) // 2))
+    save(img, path)
 
 
 if __name__ == "__main__":
