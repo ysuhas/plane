@@ -8,19 +8,44 @@ import * as React from "react";
 
 export type PlaneLogoProps = React.ComponentPropsWithoutRef<"svg">;
 
-export function PlaneLogo({ width = "85", height = "52", className, color = "currentColor" }: PlaneLogoProps) {
+// Scholrithm mark (source: /branding/scholrithm-mark.svg). Name kept so upstream call sites merge cleanly.
+export function PlaneLogo({ width = "37", height = "47", className }: PlaneLogoProps) {
+  // unique per instance: a shared id breaks when the first instance sits in a display:none subtree
+  const gradientId = `scholrithm-mark-${React.useId().replace(/:/g, "")}`;
   return (
     <svg
       width={width}
       height={height}
-      viewBox="0 0 85 52"
-      fill={color}
+      viewBox="13 6 186 234"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      aria-hidden="true"
     >
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="8" x2="0" y2="238" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#2DE4FF" />
+          <stop offset="0.16" stopColor="#16A4FC" />
+          <stop offset="0.36" stopColor="#0A5AE6" />
+          <stop offset="0.55" stopColor="#0536C4" />
+          <stop offset="0.74" stopColor="#0433B8" />
+          <stop offset="0.9" stopColor="#0B6DEE" />
+          <stop offset="1" stopColor="#1C9CFD" />
+        </linearGradient>
+      </defs>
+      <g fill={`url(#${gradientId})`} stroke={`url(#${gradientId})`} strokeWidth="7" strokeLinejoin="round">
+        <path d="M106 11 L193 58 L169 72 L106 45 L50 78 L50 109 Q72 130 90 142 Q97 147 101 150 Q90 149 81 146 Q60 139 21 120 L18 64 Z" />
+        <path d="M81 95 L106 81 L190 121 L194 178 L106 235 L18 186 L42 171 L105 203 L163 169 L163 138 L122 103 L107 109 Z" />
+      </g>
+      <circle cx="106" cy="152" r="6.8" fill={`url(#${gradientId})`} />
+      <path d="M94 105.5 L107 112 L121 105 L121 116.5 L107 123 L94 116.5 Z" fill="#0747D4" />
+      <path d="M108 97 L121.5 103" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" fill="none" />
       <path
-        d="M44.3223 2.9264C44.3223 0.754665 46.6083 -0.65811 48.5508 0.313121L80.4551 16.2653C82.9294 17.5024 84.4922 20.0321 84.4922 22.7985V48.2487C84.4922 50.4204 82.2071 51.833 80.2646 50.8619L62.3281 41.8932V22.7975C62.3281 20.0311 60.7653 17.5015 58.291 16.2643L44.3223 9.27992V2.9264ZM0 2.92543C8.01645e-05 0.753753 2.28609 -0.659069 4.22852 0.312144L22.1582 9.27699V28.3766C22.1582 31.1428 23.7213 33.6716 26.1953 34.9088L40.1699 41.8952V48.2487C40.1697 50.4202 37.8847 51.832 35.9424 50.861L4.03711 34.9088C1.56305 33.6716 0 31.1428 0 28.3766V2.92543ZM22.1582 2.92543C22.1583 0.753753 24.4443 -0.659069 26.3867 0.312144L44.3223 9.27992V28.3776C44.3223 31.1439 45.8861 33.6727 48.3604 34.9098L62.3281 41.8932V48.2487C62.3279 50.4202 60.0429 51.832 58.1006 50.861L40.1699 41.8952V22.7975C40.1699 20.0311 38.6071 17.5015 36.1328 16.2643L22.1582 9.27699V2.92543Z"
-        fill={color}
+        d="M91.5 103.6 L107 111.2 L122.8 103.6"
+        stroke="#FFFFFF"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        fill="none"
       />
     </svg>
   );

@@ -1,0 +1,42 @@
+/*
+ * Scholrithm brand palette. Unlayered on purpose: it overrides propel's default
+ * brand tokens (declared in @layer base) without editing node_modules, and a
+ * user's custom theme (inline styles on <html>) still wins over it.
+ * The scale mirrors propel's own custom-theme mapping, so one hex per mode drives it.
+ */
+:root {
+  --scholrithm-brand: #0536c4;
+  --brand-50: color-mix(in oklch, var(--scholrithm-brand), white 96%);
+  --brand-100: color-mix(in oklch, var(--scholrithm-brand), white 92%);
+  --brand-200: color-mix(in oklch, var(--scholrithm-brand), white 84%);
+  --brand-300: color-mix(in oklch, var(--scholrithm-brand), white 72%);
+  --brand-400: color-mix(in oklch, var(--scholrithm-brand), white 56%);
+  --brand-500: color-mix(in oklch, var(--scholrithm-brand), white 36%);
+  --brand-600: color-mix(in oklch, var(--scholrithm-brand), white 16%);
+  --brand-700: var(--scholrithm-brand);
+  --brand-800: color-mix(in oklch, var(--scholrithm-brand), black 18%);
+  --brand-900: color-mix(in oklch, var(--scholrithm-brand), black 32%);
+  --brand-1000: color-mix(in oklch, var(--scholrithm-brand), black 48%);
+  --brand-1100: color-mix(in oklch, var(--scholrithm-brand), black 64%);
+  --brand-1200: color-mix(in oklch, var(--scholrithm-brand), black 78%);
+  --brand-default: var(--scholrithm-brand);
+}
+
+/* Lighter base in dark mode so accents keep contrast on dark surfaces. */
+:root[data-theme*="dark"] {
+  --scholrithm-brand: #0b6dee;
+  --brand-50: color-mix(in oklch, var(--scholrithm-brand), black 80%);
+  --brand-100: color-mix(in oklch, var(--scholrithm-brand), black 70%);
+  --brand-200: color-mix(in oklch, var(--scholrithm-brand), black 56%);
+  --brand-300: color-mix(in oklch, var(--scholrithm-brand), black 42%);
+  --brand-400: color-mix(in oklch, var(--scholrithm-brand), black 28%);
+  --brand-500: color-mix(in oklch, var(--scholrithm-brand), black 14%);
+  --brand-600: var(--scholrithm-brand);
+  --brand-700: color-mix(in oklch, var(--scholrithm-brand), white 14%);
+  --brand-800: color-mix(in oklch, var(--scholrithm-brand), white 30%);
+  --brand-900: color-mix(in oklch, var(--scholrithm-brand), white 46%);
+  --brand-1000: color-mix(in oklch, var(--scholrithm-brand), white 62%);
+  --brand-1100: color-mix(in oklch, var(--scholrithm-brand), white 76%);
+  --brand-1200: color-mix(in oklch, var(--scholrithm-brand), white 88%);
+  --brand-default: var(--scholrithm-brand);
+}
