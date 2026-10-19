@@ -10,6 +10,7 @@
 # The apps' own `dev` scripts hard-code 3000/3001/3002 (upstream-owned), so this runs react-router
 # directly with --port instead of editing them.
 set -euo pipefail
+set -m # job control: each background service gets its own process group, so `down` can stop the whole tree
 cd "$(dirname "$0")/.."
 
 # LOCAL_* from the root .env (compose reads the same file for the container ports)
@@ -17,9 +18,18 @@ for kv in $(grep -E '^LOCAL_[A-Z_]+=' .env 2>/dev/null || true); do export "${kv
 WEB=${LOCAL_WEB_PORT:-3200} ADMIN=${LOCAL_ADMIN_PORT:-3201} SPACE=${LOCAL_SPACE_PORT:-3202} LIVE=${LOCAL_LIVE_PORT:-3300}
 API=${LOCAL_API_PORT:-8002} REDIS=${LOCAL_REDIS_PORT:-6380}
 
-RUN=${TMPDIR:-/tmp}/scholrithm-plane-dev
+# Logs and PIDs go in a private per-user directory, never a shared /tmp path: a planted symlink or PID
+# file there could overwrite a file or make `down` signal an unrelated process.
+RUN=${XDG_STATE_HOME:-$HOME/.local/state}/scholrithm-plane-dev
 COMPOSE=(docker compose -f docker-compose-local.yml -f docker-compose-local.ports.yml)
 url() { echo "http://localhost:$1"; }
+
+private_dir() {
+  mkdir -p "$RUN"
+  # verify before chmod, so a planted symlink can never have its target's permissions changed
+  [ ! -L "$RUN" ] && [ -d "$RUN" ] && [ -O "$RUN" ] || { echo "refusing to use $RUN: not a real directory owned by you"; exit 1; }
+  chmod 700 "$RUN"
+}
 
 # set KEY="value" in a git-ignored .env file, appending if the key is missing
 setenv() {
@@ -60,9 +70,16 @@ start() { # name port command...
   echo $! > "$RUN/$name.pid"
 }
 
-stop() { # name port
-  [ -f "$RUN/$1.pid" ] && { pkill -P "$(cat "$RUN/$1.pid")" 2>/dev/null || true; kill "$(cat "$RUN/$1.pid")" 2>/dev/null || true; rm -f "$RUN/$1.pid"; }
-  local pids; pids=$(listener "$2"); [ -n "$pids" ] && kill $pids 2>/dev/null || true
+stop() { # name: signal only a process group this script started
+  local pidfile="$RUN/$1.pid" pid
+  [ -f "$pidfile" ] && [ ! -L "$pidfile" ] || return 0
+  pid=$(cat "$pidfile"); rm -f "$pidfile"
+  # numeric, and the group leader is still our pnpm wrapper; anything else is stale or not ours
+  if [[ "$pid" =~ ^[0-9]+$ ]] && ps -o command= -p "$pid" 2>/dev/null | grep -q pnpm; then
+    kill -- "-$pid" 2>/dev/null || true
+  else
+    echo "$1: stale or foreign pid file ignored"
+  fi
 }
 
 wait_for() { # label url
@@ -75,7 +92,7 @@ wait_for() { # label url
 
 case "${1:-}" in
   up)
-    mkdir -p "$RUN"
+    private_dir
     sync_env
     "${COMPOSE[@]}" up -d --build
     wait_for api "$(url $API)/api/instances/"
@@ -89,7 +106,12 @@ case "${1:-}" in
     echo; echo "web   $(url $WEB)"; echo "admin $(url $ADMIN)/god-mode"; echo "space $(url $SPACE)/spaces"; echo "logs  $RUN/*.log"
     ;;
   down)
-    stop web "$WEB"; stop admin "$ADMIN"; stop space "$SPACE"; stop live "$LIVE"
+    private_dir
+    stop web; stop admin; stop space; stop live
+    sleep 1
+    for p in "$WEB" "$ADMIN" "$SPACE" "$LIVE"; do
+      [ -z "$(listener "$p")" ] || echo "port $p is still in use by something this script did not start"
+    done
     "${COMPOSE[@]}" down
     ;;
   status)
