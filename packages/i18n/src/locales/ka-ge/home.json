@@ -5,7 +5,7 @@
       "not_right_now": "ახლა არა",
       "create_project": {
         "title": "პროექტის შექმნა",
-        "description": "ყველაფერი იწყება პროექტით Plane-ში.",
+        "description": "ყველაფერი იწყება პროექტით Scholrithm-ში.",
         "cta": "დაწყება"
       },
       "invite_team": {
@@ -19,7 +19,7 @@
         "cta": "ამ სამუშაო სივრცის კონფიგურაცია"
       },
       "personalize_account": {
-        "title": "გახადეთ Plane თქვენი.",
+        "title": "გახადეთ Scholrithm თქვენი.",
         "description": "აირჩიეთ თქვენი სურათი, ფერები და სხვა.",
         "cta": "ახლავე მოარგეთ"
       },

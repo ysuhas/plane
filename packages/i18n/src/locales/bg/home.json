@@ -5,7 +5,7 @@
       "not_right_now": "Не сега",
       "create_project": {
         "title": "Създайте проект",
-        "description": "В Plane повечето неща започват с проект.",
+        "description": "В Scholrithm повечето неща започват с проект.",
         "cta": "Започнете"
       },
       "invite_team": {
@@ -19,7 +19,7 @@
         "cta": "Конфигурирай това работно пространство"
       },
       "personalize_account": {
-        "title": "Направете Plane свой.",
+        "title": "Направете Scholrithm свой.",
         "description": "Изберете снимка, цветове и още.",
         "cta": "Персонализирай сега"
       },

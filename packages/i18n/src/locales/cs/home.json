@@ -5,7 +5,7 @@
       "not_right_now": "Teď ne",
       "create_project": {
         "title": "Vytvořit projekt",
-        "description": "Většina věcí začíná projektem v Plane.",
+        "description": "Většina věcí začíná projektem v Scholrithm.",
         "cta": "Začít"
       },
       "invite_team": {
@@ -19,7 +19,7 @@
         "cta": "Konfigurovat tento prostor"
       },
       "personalize_account": {
-        "title": "Přizpůsobte si Plane.",
+        "title": "Přizpůsobte si Scholrithm.",
         "description": "Vyberte si obrázek, barvy a další.",
         "cta": "Personalizovat nyní"
       },

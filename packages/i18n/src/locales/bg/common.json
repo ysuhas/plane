@@ -826,7 +826,7 @@
     "edited_by": "Редактирано от"
   },
   "self_hosted_maintenance_message": {
-    "plane_didnt_start_up_this_could_be_because_one_or_more_plane_services_failed_to_start": "Plane не се стартира. Възможно е една или повече услуги на Plane да не са успели да стартират.",
+    "plane_didnt_start_up_this_could_be_because_one_or_more_plane_services_failed_to_start": "Scholrithm не се стартира. Възможно е една или повече услуги на Scholrithm да не са успели да стартират.",
     "choose_view_logs_from_setup_sh_and_docker_logs_to_be_sure": "Изберете View Logs от setup.sh и прегледайте логовете на Docker, за да се уверите."
   },
   "customize_navigation": "Персонализирай навигацията",
@@ -838,7 +838,7 @@
   "pin": "Закачи",
   "unpin": "Откачи",
   "workspace_dashboards": "Табла",
-  "pi_chat": "Plane AI",
+  "pi_chat": "Scholrithm AI",
   "in_app": "В приложението",
   "forms": "Формуляри",
   "milestones": "Етапи",
